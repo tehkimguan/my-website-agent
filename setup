@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# my-website-agent — one-command installer
+# https://github.com/tehkimguan/my-website-agent
+# By Teh Kim Guan (https://tehkimguan.com) — MIT License
+
+set -e
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_DIR="$HOME/.claude/skills/kg-website-agent"
+
+echo ""
+echo "╔══════════════════════════════════════════════╗"
+echo "║          my-website-agent  v0.1.0            ║"
+echo "║   Move off WordPress → Astro + Cloudflare    ║"
+echo "╚══════════════════════════════════════════════╝"
+echo ""
+
+# ── Prerequisites check ──────────────────────────────────────────────────────
+
+check_python() {
+  if command -v python3 &>/dev/null; then
+    PYTHON=python3
+  elif command -v python &>/dev/null; then
+    PYTHON=python
+  else
+    echo "✗  Python 3.10+ is required. Please install it first."
+    exit 1
+  fi
+  PY_MINOR=$("$PYTHON" -c 'import sys; print(sys.version_info.minor)' 2>/dev/null || echo "0")
+  PY_MAJOR=$("$PYTHON" -c 'import sys; print(sys.version_info.major)' 2>/dev/null || echo "0")
+  if [[ "$PY_MAJOR" -lt 3 || ("$PY_MAJOR" -eq 3 && "$PY_MINOR" -lt 10) ]]; then
+    echo "✗  Python 3.10+ required. Found: $("$PYTHON" --version 2>&1)"
+    exit 1
+  fi
+  echo "✓  Python: $("$PYTHON" --version 2>&1)"
+}
+
+check_python
+
+if ! "$PYTHON" -m pip --version &>/dev/null; then
+  echo "✗  pip not found. Install pip and try again."
+  exit 1
+fi
+echo "✓  pip: $("$PYTHON" -m pip --version 2>&1 | awk '{print $1, $2}')"
+
+echo ""
+
+# ── Install the wppull CLI ───────────────────────────────────────────────────
+
+if [[ -d "$REPO_DIR/wppull" ]]; then
+  echo "▶  Installing wppull CLI..."
+  if "$PYTHON" -m pip install -e "$REPO_DIR/wppull" --quiet; then
+    echo "✓  wppull installed"
+  else
+    echo "⚠  wppull install failed — install manually: pip install -e $REPO_DIR/wppull"
+  fi
+else
+  echo "⚠  wppull/ directory not found — skipping CLI install."
+fi
+
+echo ""
+
+# ── Install the Claude Code skill ────────────────────────────────────────────
+
+if command -v claude &>/dev/null || [[ -d "$HOME/.claude" ]]; then
+  echo "▶  Installing kg-website-agent skill for Claude Code..."
+  mkdir -p "$SKILL_DIR"
+  cp -r "$REPO_DIR/kg-website-agent/." "$SKILL_DIR/"
+  echo "✓  Skill installed → $SKILL_DIR"
+  echo ""
+  echo "   Claude Code will auto-trigger when you mention:"
+  echo "   migrate WordPress, clone a site, Astro, Cloudflare, deploy, publish a post…"
+  echo ""
+  echo "   ⚠  Restart Claude Code for the skill to appear."
+else
+  echo "ℹ  Claude Code not detected — skipping skill install."
+  echo "   To install manually:"
+  echo "   mkdir -p ~/.claude/skills/kg-website-agent"
+  echo "   cp -r $REPO_DIR/kg-website-agent/. ~/.claude/skills/kg-website-agent/"
+fi
+
+# ── Other AI platforms ───────────────────────────────────────────────────────
+
+echo ""
+echo "──────────────────────────────────────────────"
+echo "  Other AI platforms"
+echo "──────────────────────────────────────────────"
+echo ""
+echo "  Google Gemini Code Assist:"
+echo "    cp $REPO_DIR/GEMINI.md <your-project>/"
+echo ""
+echo "  GitHub Copilot / OpenAI Codex:"
+echo "    cp $REPO_DIR/AGENTS.md <your-project>/"
+echo ""
+
+# ── Next steps ───────────────────────────────────────────────────────────────
+
+echo "──────────────────────────────────────────────"
+echo "  Next: install Node tools and log in"
+echo "──────────────────────────────────────────────"
+echo ""
+echo "  Node.js LTS:        https://nodejs.org"
+echo "  GitHub CLI:         gh auth login"
+echo "  Cloudflare CLI:     npx wrangler login"
+echo ""
+echo "  Then ask your AI:"
+echo '    "Capture the design of mysite.com and rebuild it in Astro"'
+echo '    "Migrate every post and page off my WordPress site"'
+echo '    "Deploy this to Cloudflare and point my domain at it"'
+echo "──────────────────────────────────────────────"
+echo ""
