@@ -57,6 +57,9 @@ media-manifest.json
 capture/
 src/content/blog/
 
+# Eval workspace (skill-creator test runs, results, harnesses)
+kg-website-agent-workspace/
+
 # Temporary
 tmp/
 temp/

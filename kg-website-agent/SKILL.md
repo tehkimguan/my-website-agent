@@ -1,19 +1,22 @@
 ---
 name: kg-website-agent
 description: >
-  Universal website agent. Clones an existing site's design, migrates a WordPress
-  site to a free Astro + Cloudflare stack, and runs it day to day in plain English.
+  Universal website agent: clone a site's design, migrate a WordPress site to a
+  free Astro + Cloudflare stack, and run it day to day in plain English.
 
-  Activate for: migrate WordPress, move off WordPress, WordPress to Astro, WordPress
-  to Cloudflare, clone a website's design, rebuild a site, static site migration,
-  deploy to Cloudflare Pages or Workers, point a domain at Cloudflare, set up a
-  contact form on a static site, publish a blog post to an Astro/MDX site, generate
-  a cover or hero image for a page, turn a website task into a reusable skill.
+  Make sure to use this skill WHENEVER the user wants to move off or migrate
+  WordPress, clone or rebuild a website's design, scaffold or deploy an Astro site,
+  deploy to Cloudflare Pages or Workers, point a domain at Cloudflare (nameservers,
+  MX records, propagation), add a contact form to a static site, publish or roll
+  back an MDX blog post, or generate a cover, hero, or OG image for a site page.
+  Trigger even when the user names no tool and only describes the problem, such as
+  "my WordPress site keeps getting hacked", "my hosting is too expensive", or "how
+  do I make my site load faster".
 
-  Six-phase migration: A capture design, B scaffold Astro, C import WordPress content,
-  D assemble, E deploy to Cloudflare, F go live. Uses the wppull CLI for content,
-  built-in computer-use for design capture, and the Gemini image API for new images.
-  By tehkimguan.com — free, open source.
+  Runs a six-phase migration (capture, scaffold, import, assemble, deploy, go-live)
+  using the bundled wppull CLI for WordPress content, built-in computer-use for
+  design capture, and the Gemini image API for images. By tehkimguan.com, free and
+  open source.
 ---
 
 # kg-website-agent
